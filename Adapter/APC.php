@@ -8,12 +8,12 @@
 class Q_Cache_Adapter_APC extends Q_Cache_Adapter_Abstract
 {
     /**
-     * @throws Q_Cache_Exception
+     * @throws Q_Cache_Adapter_Exception
      */
     public function __construct()
     {
         if (!function_exists('apc_store') || !ini_get('apc.enabled')) {
-            throw new Q_Cache_Exception('APC is not installed or is not enabled');
+            throw new Q_Cache_Adapter_Exception('APC is not installed or is not enabled');
         }
     }
 
@@ -38,7 +38,7 @@ class Q_Cache_Adapter_APC extends Q_Cache_Adapter_Abstract
 
     public function set($key, $value, $lifetime = null)
     {
-        return apc_store($key, $value, $lifetime);
+        return apc_store($key, $value, $this->getLifetime($lifetime));
     }
 
     public function flush()

@@ -19,14 +19,18 @@ class Q_Cache
         'lifetime' => 4320
     );
 
-    public function __construct(Q_Cache_Adapter_Abstract $adapter, array $options)
+    /**
+     * @param Q_Cache_Adapter_Abstract $adapter
+     * @param array $options
+     */
+    public function __construct(Q_Cache_Adapter_Abstract $adapter, array $options = array())
     {
         $this->_adapter = $adapter;
-        $this->setOptions($options);
+        $this->_adapter->setOptions(array_merge($this->_options, $options));
     }
 
     /**
-     * Назначить
+     * Save value in cache
      *
      * @param string $key Cache key
      * @param mixed $value Data to put
@@ -38,19 +42,19 @@ class Q_Cache
     }
 
     /**
-     * Получить
+     * Get cache value
      *
      * @param string $key Cache key
-     * @param mixed $default Default data
+     * @param mixed $defaultValue Default value
      * @return mixed
      */
-    public function get($key, $default = null)
+    public function get($key, $defaultValue = null)
     {
         return $this->_adapter->get($key, $defaultValue);
     }
 
     /**
-     * Проверить на существование
+     * Check for the existence of the cache
      *
      * @param string $key Cache key
      * @return boolean
@@ -61,7 +65,7 @@ class Q_Cache
     }
 
     /**
-     * Удалить
+     * Remove a content from cache
      *
      * @param string $key Cache key
      * @return boolean
@@ -72,23 +76,22 @@ class Q_Cache
     }
 
     /**
-     * Очистить кэш
+     * Flush cache
      *
      * @return boolean
      */
-    public function flush() {
+    public function flush()
+    {
         return $this->_adapter->flush();
     }
 
     public function setOption($key, $value)
     {
-        $this->_options[$key] = $value;
+        $this->_adapter->setOption($key, $value);
     }
 
     public function setOptions(array $options)
     {
-        foreach ($options as $key => $value) {
-            $this->setOption($key, $value);
-        }
+        $this->_adapter->setOptions($options);
     }
 }

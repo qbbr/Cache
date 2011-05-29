@@ -7,11 +7,14 @@
  */
 class Q_Cache_Adapter_eAccelerator extends Q_Cache_Adapter_Abstract
 {
+    /**
+     * @throws Q_Cache_Adapter_Exception
+     */
     public function __construct()
     {
         if (!function_exists('eaccelerator_put') || !ini_get('eaccelerator.enable'))
         {
-            throw new Q_Cache_Exception('eAccelerator is not installed or is not enabled');
+            throw new Q_Cache_Adapter_Exception('eAccelerator is not installed or is not enabled');
         }
     }
 
@@ -34,7 +37,7 @@ class Q_Cache_Adapter_eAccelerator extends Q_Cache_Adapter_Abstract
 
     public function set($key, $value, $lifetime = null)
     {
-        return eaccelerator_put($key, $value, $lifetime);
+        return eaccelerator_put($key, $value, $this->getLifetime($lifetime));
     }
 
     public function flush()

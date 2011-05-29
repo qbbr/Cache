@@ -11,16 +11,16 @@ class Q_Cache_Adapter_Memchache extends Q_Cache_Adapter_Abstract
     protected $_compress = null;
 
     /**
-     * @throws Q_Cache_Exception
+     * @throws Q_Cache_Adapter_Exception
      */
     public function __construct($host = 'localhost', $port = 11211)
     {
         if (!class_exists('Memcache')) {
-            throw new Q_Cache_Exception('Memcache is not installed');
+            throw new Q_Cache_Adapter_Exception('Memcache is not installed');
         }
 
         $this->_memchache = new Memcache();
-        $this->_memchache->addserver('localhost', $port);
+        $this->_memchache->addserver($host, $port);
     }
 
     public function get($key, $defaultValue = null)
@@ -42,7 +42,7 @@ class Q_Cache_Adapter_Memchache extends Q_Cache_Adapter_Abstract
 
     public function set($key, $value, $lifetime = null)
     {
-        return $this->_memchache->set($key, $value, $this->_compress, $lifetime);
+        return $this->_memchache->set($key, $value, $this->_compress, $this->getLifetime($lifetime));
     }
 
     public function flush()

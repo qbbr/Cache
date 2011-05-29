@@ -8,13 +8,13 @@
 class Q_Cache_Adapter_XCache extends Q_Cache_Adapter_Abstract
 {
     /**
-     * @throws Q_Cache_Exception
+     * @throws Q_Cache_Adapter_Exception
      */
     public function __construct()
     {
         if (!function_exists('xcache_set'))
         {
-            throw new Q_Cache_Exception('XCache is not installed');
+            throw new Q_Cache_Adapter_Exception('XCache is not installed');
         }
     }
 
@@ -37,7 +37,7 @@ class Q_Cache_Adapter_XCache extends Q_Cache_Adapter_Abstract
 
     public function set($key, $value, $lifetime = null)
     {
-        return xcache_set($key, $value, $lifetime);
+        return xcache_set($key, $value, $this->getLifetime($lifetime));
     }
 
     public function flush()

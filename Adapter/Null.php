@@ -7,9 +7,9 @@
  */
 class Q_Cache_Adapter_Null extends Q_Cache_Adapter_Abstract
 {
-    public function get($key, $defaultValue)
+    public function get($key, $defaultValue = null)
     {
-        return $defaultValue;
+        return (null !== $defaultValue) ? $defaultValue : null;
     }
 
     public function has($key)
@@ -23,6 +23,11 @@ class Q_Cache_Adapter_Null extends Q_Cache_Adapter_Abstract
     }
 
     public function set($key, $value, $lifetime = null)
+    {
+        return true;
+    }
+
+    public function flush()
     {
         return true;
     }

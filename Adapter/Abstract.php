@@ -7,9 +7,13 @@
  */
 abstract class Q_Cache_Adapter_Abstract
 {
+    public $_options = array();
+    
     public function getLifetime($lifetime)
     {
-        return (null === $lifetime) ? '' : $lifetime;
+        return (null === $lifetime)
+             ? (isset($this->_options['lifetime'])) ? $this->_options['lifetime'] : null
+             : $lifetime;
     }
 
     abstract public function set($key, $value, $lifetime = null);
@@ -21,4 +25,16 @@ abstract class Q_Cache_Adapter_Abstract
     abstract public function remove($key);
 
     abstract public function flush();
+    
+    public function setOption($key, $value)
+    {
+        $this->_options[$key] = $value;
+    }
+    
+    public function setOptions(array $options)
+    {
+        foreach ($options as $key => $value) {
+            $this->setOption($key, $value);
+        }
+    }
 }

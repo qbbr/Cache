@@ -9,12 +9,15 @@ class Q_Cache_Adapter_File extends Q_Cache_Adapter_Abstract
 {
     const EXTENSION = '.cache';
     const SEPARATOR = '_';
+    
+    const FILE_TIMEOUT = 0;
+    const FILE_VALUE = 1;
 
     protected $_cacheDir;
 
     /**
-     * @param string $file Путь до файла
-     * @throws Q_Logger_Exception
+     * @param string $cacheDir Directory to storage cache file
+     * @throws Q_Cache_Adapter_Exception
      */
     public function __construct($cacheDir)
     {
@@ -24,8 +27,10 @@ class Q_Cache_Adapter_File extends Q_Cache_Adapter_Abstract
             }
         }
 
-        if (!is_writable($this->_cacheDir)) {
-            throw new Q_Cache_Adapter_Exception("Dir ({$this->_cacheDir}) is not writable");
+        if (!is_writable($cacheDir)) {
+            if (!@chmod($cacheDir, 0777)) {
+                throw new Q_Cache_Adapter_Exception("Dir ({$cacheDir}) is not writable");
+            }
         }
 
         $this->_cacheDir = $cacheDir;
@@ -38,6 +43,10 @@ class Q_Cache_Adapter_File extends Q_Cache_Adapter_Abstract
         if (!file_exists($filePath)) {
             return $defaultValue;
         }
+        
+        $content = explode(PHP_EOL, (file_get_contents($filePath)));
+        
+        return ($content[self::FILE_TIMEOUT] < time()) ? $content[self::FILE_VALUE] : $defaultValue;
     }
 
     public function has($key)
@@ -47,30 +56,65 @@ class Q_Cache_Adapter_File extends Q_Cache_Adapter_Abstract
 
     public function remove($key)
     {
-        return unlink($this->getFilePath($key));
+        $filePath = $this->getFilePath($key);
+        
+        if (file_exists($filePath)) {
+            return unlink($this->getFilePath($key));
+        }
+        
+        return true;
     }
 
     public function set($key, $value, $lifetime = null)
     {
+        $filePath = $this->getFilePath($key);
+        
+        if (!is_dir(dirname($filePath))) {
+            mkdir(dirname($filePath), 0777, true);
+        }
+        
+        echo $this->getLifetime($lifetime);
+
+        $content = time() + $this->getLifetime($lifetime)
+                 . PHP_EOL
+                 . $value;
+        
+        file_put_contents($filePath, $content);
+        
+        chmod($filePath, 0666);
+        
+        return true;
     }
 
     public function flush()
     {
-        return $this->recursiveRemove($this->_cacheDir());
+        return $this->recursiveRemove($this->_cacheDir);
     }
 
+    /**
+     * Convert key to file path
+     *
+     * @param string $key
+     * @return string
+     */
     protected function getFilePath($key)
     {
-        return $this->_cacheDir . DS . str_replace(self::SEPARATOR, DS, $key) . self::EXTENSION;
+        return $this->_cacheDir . DIRECTORY_SEPARATOR . str_replace(self::SEPARATOR, DIRECTORY_SEPARATOR, $key) . self::EXTENSION;
     }
 
+    /**
+     * Recursive remove directory content
+     * 
+     * @param string $dir
+     * @return boolean
+     */
     protected function recursiveRemove($dir)
     {
         $result = true;
 
-        foreach (glob($dir . DS . '*') as $file) {
+        foreach (glob($dir . DIRECTORY_SEPARATOR . '*') as $file) {
             if (is_dir($file)) {
-                $result = $this->recursiveRemove();
+                $result = $this->recursiveRemove($file);
                 $result = rmdir($file) && $result;
             } else {
                 $result = unlink($file) && $result;
