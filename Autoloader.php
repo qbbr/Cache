@@ -2,11 +2,16 @@
 /**
  * Autoloads Q_Cache classes
  *
+ * @package Q_Cache
  * @author Sokolov Innokenty, <sokolov.innokenty@gmail.com>
+ * @license http://opensource.org/licenses/MIT MIT License
  * @copyright Copyright (c) 2011, qbbr
  */
 class Q_Cache_Autoloader
 {
+    /**
+     * Registers Q_Cache_Autoloader as an SPL autoloader
+     */
     static public function register()
     {
         ini_set('unserialize_callback_func', 'spl_autoload_call');
@@ -14,9 +19,10 @@ class Q_Cache_Autoloader
     }
 
     /**
-     * Автозагрузка классов
+     * Handles autoloading of classes.
      *
-     * @param string $class Название класса
+     * @param string $class Class name
+     * @return boolean Returns true if the class has been loaded
      */
     static public function autoload($class)
     {
