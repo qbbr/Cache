@@ -22,24 +22,24 @@ class Q_Cache_Adapter_eAccelerator extends Q_Cache_Adapter_Abstract
 
     public function get($key, $defaultValue = null)
     {
-        $value = eaccelerator_get($key);
+        $value = eaccelerator_get($this->getKey($key));
 
         return (false === $value) ? $defaultValue : $value;
     }
 
     public function has($key)
     {
-        return (boolean) eaccelerator_get($key);
+        return (boolean) eaccelerator_get($this->getKey($key));
     }
 
     public function remove($key)
     {
-        return eaccelerator_rm($key);
+        return eaccelerator_rm($this->getKey($key));
     }
 
     public function set($key, $value, $lifetime = null)
     {
-        return eaccelerator_put($key, $value, $this->getLifetime($lifetime));
+        return eaccelerator_put($this->getKey($key), $value, $this->getLifetime($lifetime));
     }
 
     public function flush()

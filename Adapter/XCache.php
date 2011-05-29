@@ -22,24 +22,24 @@ class Q_Cache_Adapter_XCache extends Q_Cache_Adapter_Abstract
 
     public function get($key, $defaultValue = null)
     {
-        $value = xcache_get($key);
+        $value = xcache_get($this->getKey($key));
 
         return (false === $value) ? $defaultValue : $value;
     }
 
     public function has($key)
     {
-        return xcache_isset($key);
+        return xcache_isset($this->getKey($key));
     }
 
     public function remove($key)
     {
-        return xcache_unset($key);
+        return xcache_unset($this->getKey($key));
     }
 
     public function set($key, $value, $lifetime = null)
     {
-        return xcache_set($key, $value, $this->getLifetime($lifetime));
+        return xcache_set($this->getKey($key), $value, $this->getLifetime($lifetime));
     }
 
     public function flush()

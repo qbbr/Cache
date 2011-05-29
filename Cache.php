@@ -18,7 +18,8 @@ class Q_Cache
      * @var array
      */
     protected $_options = array(
-        'lifetime' => 4320
+        'lifetime' => 4320,
+        'prefix' => 'Q_Cache'
     );
 
     /**

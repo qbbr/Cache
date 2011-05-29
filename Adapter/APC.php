@@ -21,26 +21,26 @@ class Q_Cache_Adapter_APC extends Q_Cache_Adapter_Abstract
 
     public function get($key, $defaultValue = null)
     {
-        $value = apc_fetch($key, $success);
+        $value = apc_fetch($this->getKey($key), $success);
 
         return ($success) ? $value : $defaultValue;
     }
 
     public function has($key)
     {
-        apc_fetch($key, $success);
+        apc_fetch($this->getKey($key), $success);
 
         return $success;
     }
 
     public function remove($key)
     {
-        return apc_delete($key);
+        return apc_delete($this->getKey($key));
     }
 
     public function set($key, $value, $lifetime = null)
     {
-        return apc_store($key, $value, $this->getLifetime($lifetime));
+        return apc_store($this->getKey($key), $value, $this->getLifetime($lifetime));
     }
 
     public function flush()

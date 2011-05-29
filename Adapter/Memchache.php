@@ -27,24 +27,24 @@ class Q_Cache_Adapter_Memchache extends Q_Cache_Adapter_Abstract
 
     public function get($key, $defaultValue = null)
     {
-        $value = $this->_memchache->get($key);
+        $value = $this->_memchache->get($this->getKey($key));
 
         return (false === $value) ? $defaultValue : $value;
     }
 
     public function has($key)
     {
-        return (boolean) $this->_memchache->get($key);
+        return (boolean) $this->_memchache->get($this->getKey($key));
     }
 
     public function remove($key)
     {
-        return $this->_memchache->delete($key);
+        return $this->_memchache->delete($this->getKey($key));
     }
 
     public function set($key, $value, $lifetime = null)
     {
-        return $this->_memchache->set($key, $value, $this->_compress, $this->getLifetime($lifetime));
+        return $this->_memchache->set($this->getKey($key), $value, $this->_compress, $this->getLifetime($lifetime));
     }
 
     public function flush()
