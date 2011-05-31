@@ -11,7 +11,7 @@ class Q_Cache_Adapter_File extends Q_Cache_Adapter_Abstract
 {
     const EXTENSION = '.cache';
     const SEPARATOR = '_';
-    
+
     const FILE_TIMEOUT = 0;
     const FILE_VALUE = 1;
 
@@ -45,9 +45,9 @@ class Q_Cache_Adapter_File extends Q_Cache_Adapter_Abstract
         if (!file_exists($filePath)) {
             return $defaultValue;
         }
-        
+
         $content = explode(PHP_EOL, (file_get_contents($filePath)));
-        
+
         return ($content[self::FILE_TIMEOUT] < time()) ? $content[self::FILE_VALUE] : $defaultValue;
     }
 
@@ -59,32 +59,32 @@ class Q_Cache_Adapter_File extends Q_Cache_Adapter_Abstract
     public function remove($key)
     {
         $filePath = $this->getFilePath($key);
-        
+
         if (file_exists($filePath)) {
             return unlink($this->getFilePath($key));
         }
-        
+
         return true;
     }
 
     public function set($key, $value, $lifetime = null)
     {
         $filePath = $this->getFilePath($key);
-        
+
         if (!is_dir(dirname($filePath))) {
             mkdir(dirname($filePath), 0777, true);
         }
-        
+
         echo $this->getLifetime($lifetime);
 
         $content = time() + $this->getLifetime($lifetime)
                  . PHP_EOL
                  . $value;
-        
+
         file_put_contents($filePath, $content);
-        
+
         chmod($filePath, 0666);
-        
+
         return true;
     }
 
@@ -106,7 +106,7 @@ class Q_Cache_Adapter_File extends Q_Cache_Adapter_Abstract
 
     /**
      * Recursive remove directory content
-     * 
+     *
      * @param string $dir
      * @return boolean
      */

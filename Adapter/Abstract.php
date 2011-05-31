@@ -10,26 +10,26 @@
 abstract class Q_Cache_Adapter_Abstract
 {
     public $_options = array();
-    
+
     public function setOption($key, $value)
     {
         $this->_options[$key] = $value;
     }
-    
+
     public function setOptions(array $options)
     {
         foreach ($options as $key => $value) {
             $this->setOption($key, $value);
         }
     }
-    
+
     protected function getLifetime($lifetime)
     {
         return (null === $lifetime)
              ? (isset($this->_options['lifetime'])) ? $this->_options['lifetime'] : null
              : $lifetime;
     }
-    
+
     protected function getKey($key)
     {
         return (isset($this->_options['prefix']))

@@ -45,8 +45,8 @@ class Q_Cache_Adapter_XCache extends Q_Cache_Adapter_Abstract
     public function flush()
     {
         for ($i = 0, $max = xcache_count(XC_TYPE_VAR); $i < $max; $i++) {
-			xcache_clear_cache(XC_TYPE_VAR, $i);
-		}
+            xcache_clear_cache(XC_TYPE_VAR, $i);
+        }
 
         return true;
     }
