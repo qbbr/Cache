@@ -48,7 +48,7 @@ class Q_Cache_Adapter_File extends Q_Cache_Adapter_Abstract
 
         $content = explode(PHP_EOL, (file_get_contents($filePath)));
 
-        return ($content[self::FILE_TIMEOUT] < time()) ? $content[self::FILE_VALUE] : $defaultValue;
+        return ($content[self::FILE_TIMEOUT] > time()) ? unserialize($content[self::FILE_VALUE]) : $defaultValue;
     }
 
     public function has($key)
@@ -75,11 +75,9 @@ class Q_Cache_Adapter_File extends Q_Cache_Adapter_Abstract
             mkdir(dirname($filePath), 0777, true);
         }
 
-        echo $this->getLifetime($lifetime);
-
         $content = time() + $this->getLifetime($lifetime)
                  . PHP_EOL
-                 . $value;
+                 . serialize($value);
 
         file_put_contents($filePath, $content);
 
