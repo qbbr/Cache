@@ -11,7 +11,7 @@ class Q_Cache_Adapter_Null extends Q_Cache_Adapter_Abstract
 {
     public function get($key, $defaultValue = null)
     {
-        return (null !== $defaultValue) ? $defaultValue : null;
+        return $defaultValue;
     }
 
     public function has($key)
