@@ -7,4 +7,5 @@ Supported cache systems:
  * [Memcache](http://pecl.php.net/package/memcache)
  * [XCache](http://xcache.lighttpd.net/)
  * [eAccelerator](http://eaccelerator.net/)
+ * [WinCache](http://php.net/manual/en/book.wincache.php) (test)
  * File

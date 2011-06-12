@@ -14,8 +14,7 @@ class Q_Cache_Adapter_XCache extends Q_Cache_Adapter_Abstract
      */
     public function __construct()
     {
-        if (!function_exists('xcache_set'))
-        {
+        if (!function_exists('xcache_set')) {
             throw new Q_Cache_Adapter_Exception('XCache is not installed');
         }
     }
