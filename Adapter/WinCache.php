@@ -26,7 +26,7 @@ class Q_Cache_Adapter_WinCache extends Q_Cache_Adapter_Abstract
 
     public function get($key, $defaultValue = null)
     {
-        $value = wincache_ucache_get($key, $success);
+        $value = wincache_ucache_get($this->getKey($key), $success);
 
         if ($success) return $value;
         else return $defaultValue;
@@ -44,6 +44,6 @@ class Q_Cache_Adapter_WinCache extends Q_Cache_Adapter_Abstract
 
     public function set($key, $value, $lifetime = null)
     {
-        $result = wincache_ucache_add($key, $value, $this->getLifetime($lifetime));
+        $result = wincache_ucache_add($this->getKey($key), $value, $this->getLifetime($lifetime));
     }
 }
