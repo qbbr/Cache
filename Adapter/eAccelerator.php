@@ -14,8 +14,7 @@ class Q_Cache_Adapter_eAccelerator extends Q_Cache_Adapter_Abstract
      */
     public function __construct()
     {
-        if (!function_exists('eaccelerator_put') || !ini_get('eaccelerator.enable'))
-        {
+        if (!function_exists('eaccelerator_put') || !ini_get('eaccelerator.enable')) {
             throw new Q_Cache_Adapter_Exception('eAccelerator is not installed or is not enabled');
         }
     }
