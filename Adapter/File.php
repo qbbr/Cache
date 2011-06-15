@@ -12,9 +12,6 @@ class Q_Cache_Adapter_File extends Q_Cache_Adapter_Abstract
     const EXTENSION = '.cache';
     const SEPARATOR = '_';
 
-    const FILE_TIMEOUT = 0;
-    const FILE_VALUE = 1;
-
     protected $_cacheDir;
 
     /**
@@ -46,9 +43,11 @@ class Q_Cache_Adapter_File extends Q_Cache_Adapter_Abstract
             return $defaultValue;
         }
 
-        $content = explode(PHP_EOL, (file_get_contents($filePath)), 2);
+        $fp = fopen($filePath, 'r');
 
-        return ($content[self::FILE_TIMEOUT] > time()) ? $content[self::FILE_VALUE] : $defaultValue;
+        $firstLine = fgets($fp, 12);
+
+        return (intval($firstLine) > time()) ? stream_get_contents($fp, -1, strlen($firstLine)) : $defaultValue;
     }
 
     public function has($key)
