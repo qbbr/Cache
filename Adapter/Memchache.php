@@ -9,16 +9,20 @@
  */
 class Q_Cache_Adapter_Memchache extends Q_Cache_Adapter_Abstract
 {
-    protected $_memchache = null;
-    protected $_compress = null;
+    protected $_memchache;
+    protected $_compress = 0;
 
     /**
      * @throws Q_Cache_Adapter_Exception
      */
-    public function __construct($host = 'localhost', $port = 11211)
+    public function __construct($host = 'localhost', $port = 11211, $compress = false)
     {
         if (!class_exists('Memcache')) {
             throw new Q_Cache_Adapter_Exception('Memcache is not installed');
+        }
+
+        if (true === $compress) {
+            $this->_compress = MEMCACHE_COMPRESSED;
         }
 
         $this->_memchache = new Memcache();
