@@ -80,7 +80,7 @@ class Q_Cache_Adapter_File extends Q_Cache_Adapter_Abstract
 
         file_put_contents($filePath, $content);
 
-        chmod($filePath, 0666);
+        @chmod($filePath, 0666);
 
         return true;
     }
